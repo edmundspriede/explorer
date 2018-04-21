@@ -13,6 +13,12 @@ angular.module('ethExplorer')
 	for (var i = 0; i < maxBlocks; ++i) {
 	    $scope.blocks.push(web3.eth.getBlock(blockNum - i));
 	}
+        
+        $scope.blocks.forEach(prepareBlocks);
+        
+        
+       
+        
 	
         $scope.processRequest = function() {
              var requestStr = $scope.ethRequest.split('0x').join('');
@@ -41,6 +47,31 @@ angular.module('ethExplorer')
 
          function goToTxInfos (requestStr) {
              $location.path('/transaction/'+requestStr);
+        }
+        
+        
+         function prepareBlocks(item , index) {
+            
+            // pool A
+            if (item.miner == 0x3be27a1781bf709b38f7764f9dfc6951dad3050c) {
+                
+               $scope.blocks[index].class = 'poola';  
+               $scope.blocks[index].name = 'poola'; 
+            }
+            
+            
+            // pool B
+            if (item.miner == 0xb2d1942aa9fcdd5f5d11152fa06dfe754416fba5) {
+                
+               $scope.blocks[index].class = 'poolb';  
+               $scope.blocks[index].name = 'poolb';  
+               
+            }
+            
+             $scope.blocks[index].extrareadable = hex2a(item.extraData);
+             
+             var blockdate = new Date(item.timestamp * 1000);
+             $scope.blocks[index].datetime = blockdate.toGMTString();
         }
 
     });
